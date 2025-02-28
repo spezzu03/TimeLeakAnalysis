@@ -1,0 +1,76 @@
+%{
+open AST
+%}
+
+// Declare the tokens (terminal symbols)
+%token <int> NUM
+%token <string> IDENT
+%token TIMES DIV PLUS MINUS POW LPAREN RPAREN EOF SKIP SEMI ASSIGN  GUARD
+%token TRUE FALSE BITOR BITAND NOT EQUALS GREATER LESS LBRACK RBRACK ARROW IF FI DO OD LOGAND LOGOR
+
+// Precedence is given by the order (from low to high)
+%left PLUS MINUS // unary minus has highest precedence 
+%left TIMES DIV
+%left BITOR LOGOR
+%left BITAND LOGAND
+%right POW SEMI ASSIGN GUARD
+%left NOT
+
+%start start_command
+
+%type <AST.command> start_command
+%type <AST.command> command
+%type <AST.guarded> guarded_command
+%type <AST.expr> expression_0
+%type <AST.expr> expression_1
+%type <AST.boolean> boolean
+
+%%
+
+start_command: command EOF  { $1 }
+
+command:
+    | IDENT ASSIGN expression_0     { Assignment(Variable($1), $3) }
+    | SKIP                          { Skip }
+    | command SEMI command          { Sequence($1, $3) }
+    | IF guarded_command FI         { If($2) }
+    | DO guarded_command OD         { Do($2) }
+
+guarded_command:
+    | boolean ARROW command         { Arrow($1, $3) }
+    | guarded_command GUARD guarded_command     { Guard($1, $3)}
+
+boolean:
+    | TRUE                          { Value(true) }
+    | FALSE                         { Value(false) }
+    | NOT boolean                   { Not($2) }
+    | boolean LOGAND boolean        { LogAnd($1,$3) }
+    | boolean BITAND boolean        { BitAnd($1,$3) }
+    | boolean LOGOR boolean         { LogOr($1,$3) }
+    | boolean BITOR boolean         { BitOr($1,$3) }
+    | expression_0 EQUALS expression_0              { Equal($1,$3) }
+    | expression_0 LESS expression_0                { Less($1,$3) }
+    | expression_0 GREATER expression_0             { Greater($1,$3) }
+    | expression_0 NOT EQUALS expression_0          { NotEqual($1,$4) }
+    | expression_0 LESS EQUALS expression_0         { LessEqual($1,$4) }
+    | expression_0 GREATER EQUALS expression_0      { GreaterEqual($1,$4) }
+    | LPAREN boolean RPAREN                         { $2 }
+
+// expression needs to give higher precedence to unary minus.
+// other precedences are given above.
+expression_0: // lower precedence
+    | expression_0 TIMES expression_0   { TimesExpr($1,$3) }
+    | expression_0 DIV expression_0     { DivExpr($1,$3) }
+    | expression_0 PLUS expression_0    { PlusExpr($1,$3) }
+    | expression_0 MINUS expression_0   { MinusExpr($1,$3) }
+    | expression_0 POW expression_0     { PowExpr($1,$3) }
+    | expression_1                      { $1 }
+
+expression_1: // Higher precedence level for expressions. Unary minus has highest precedence.
+    | MINUS expression_1               { UMinusExpr($2) }
+    | NUM                              { Num($1) }
+    | IDENT                            { Variable($1) }
+    | LPAREN expression_0 RPAREN       { $2 }
+    | IDENT LBRACK expression_0 RBRACK { Array($1,$3) }
+
+%%

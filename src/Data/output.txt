@@ -1,0 +1,45 @@
+{ time = _time & x = _x & y = _y & z = _z }
+time := 0;
+x := 0;
+time := (((time + 1) + 0) + 0);
+y := 5;
+time := (((time + 1) + 0) + 0);
+z := 10;
+time := (((time + 1) + 0) + 0);
+if ((secret > 0) & !false) -> time := ((time + 1) + 3);
+	x := (x + 1);
+	time := (((time + 1) + 0) + 1)
+[] ((secret <= 0) & !((secret > 0) | false)) -> time := ((time + 1) + 5);
+	x := (x - 1);
+	time := (((time + 1) + 0) + 1)
+fi;
+do ((y < z) & !false) -> time := ((time + 1) + 3);
+	y := (y + 1);
+	time := (((time + 1) + 0) + 1)
+[] ((x < 10) & !((y < z) | false)) -> time := ((time + 1) + 5);
+	x := (x + 2);
+	time := (((time + 1) + 0) + 1)
+od;
+_time := 0;
+_x := 0;
+_time := (((_time + 1) + 0) + 0);
+_y := 5;
+_time := (((_time + 1) + 0) + 0);
+_z := 10;
+_time := (((_time + 1) + 0) + 0);
+if ((_secret > 0) & !false) -> _time := ((_time + 1) + 3);
+	_x := (_x + 1);
+	_time := (((_time + 1) + 0) + 1)
+[] ((_secret <= 0) & !((_secret > 0) | false)) -> _time := ((_time + 1) + 5);
+	_x := (_x - 1);
+	_time := (((_time + 1) + 0) + 1)
+fi;
+do ((_y < _z) & !false) -> _time := ((_time + 1) + 3);
+	_y := (_y + 1);
+	_time := (((_time + 1) + 0) + 1)
+[] ((_x < 10) & !((_y < _z) | false)) -> _time := ((_time + 1) + 5);
+	_x := (_x + 2);
+	_time := (((_time + 1) + 0) + 1)
+od
+
+{ time = _time & x = _x & y = _y & z = _z }

@@ -1,0 +1,59 @@
+{
+open System
+open FSharp.Text.Lexing
+open Parser  // Reference to parser's token types
+
+// Function to retrieve the matched lexeme as a string
+let lexeme (lexbuf: LexBuffer<_>) = LexBuffer<_>.LexemeString lexbuf
+
+// Set the language to English such that 4.0 is parsed as 4 and not 40.
+System.Globalization.CultureInfo.CurrentCulture <- new System.Globalization.CultureInfo("en-US")
+}
+
+let digit = ['0'-'9']
+let num = digit+
+let whitespace = [' ' '\t']
+let newline     = "\n\r" | '\n' | '\r'
+let letter = ['a'-'z' 'A'-'Z']
+let string = letter (letter | digit | '_' )*
+let bool        = "true" | "false"
+
+rule tokenize = parse
+    // deal with tokens that need to be ignored (skip them)
+    | whitespace    { tokenize lexbuf }
+    | newline       { lexbuf.EndPos <- lexbuf.EndPos.NextLine; tokenize lexbuf; }
+    // deal with tokens that need to be built
+    | "skip"    { SKIP }
+    | "if"      { IF }
+    | "fi"      { FI }
+    | "do"      { DO }
+    | "od"      { OD }
+    | "->"      { ARROW }
+    | ":="      { ASSIGN }
+    | ";"       { SEMI }
+    | "[]"      { GUARD }
+    | "["       { LBRACK }
+    | "]"       { RBRACK }
+    // arithmetic expressions
+    | "("       { LPAREN }
+    | ")"       { RPAREN }
+    | "+"       { PLUS }
+    | "*"       { TIMES }
+    | "-"       { MINUS }
+    | "/"       { DIV }
+    | "^"       { POW }
+    // boolean expressions
+    | "true"    { TRUE }
+    | "false"   { FALSE }
+    | "="       { EQUALS }
+    | ">"       { GREATER }
+    | "<"       { LESS }
+    | "|"       { BITOR }
+    | "&"       { BITAND }
+    | "||"      { LOGOR }
+    | "&&"      { LOGAND }
+    | "!"       { NOT }
+    // strings
+    | num       { NUM (int (lexeme lexbuf)) }
+    | string    { IDENT (lexeme lexbuf) }
+    | eof       { EOF }

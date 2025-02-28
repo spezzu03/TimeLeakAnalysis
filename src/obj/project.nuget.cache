@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "aUbINZxYCFc=",
+  "success": true,
+  "projectFilePath": "/Users/mathiasspezia/Desktop/DTU/DTU3/Bachelor Project/TimeLeakAnalysis/src/TimeLeakAnalysis.fsproj",
+  "expectedPackageFiles": [
+    "/Users/mathiasspezia/.nuget/packages/fsharp.core/9.0.201/fsharp.core.9.0.201.nupkg.sha512",
+    "/Users/mathiasspezia/.nuget/packages/fslexyacc/11.3.0/fslexyacc.11.3.0.nupkg.sha512",
+    "/Users/mathiasspezia/.nuget/packages/fslexyacc.runtime/11.3.0/fslexyacc.runtime.11.3.0.nupkg.sha512"
+  ],
+  "logs": []
+}
