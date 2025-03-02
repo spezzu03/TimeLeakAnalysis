@@ -71,6 +71,7 @@ type nonTerminalId =
     | NONTERM_start_command
     | NONTERM_command
     | NONTERM_guarded_command
+    | NONTERM_invariant
     | NONTERM_boolean
     | NONTERM_expression_0
     | NONTERM_expression_1

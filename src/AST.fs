@@ -35,8 +35,10 @@ type command =
     | Sequence of (command * command)
     | Assignment of (expr * expr)
     | If of (guarded)
-    | Do of (guarded)
+    | Do of (guarded * invariant)
 
 and guarded =
     | Arrow of (boolean * command)
     | Guard of (guarded * guarded)
+
+and invariant = Option<boolean>

@@ -28,3 +28,4 @@
 /Users/mathiasspezia/Desktop/DTU/DTU3/Bachelor Project/TimeLeakAnalysis/src/obj/Debug/net9.0/TimeLeakAnalysis.pdb
 /Users/mathiasspezia/Desktop/DTU/DTU3/Bachelor Project/TimeLeakAnalysis/src/obj/Debug/net9.0/TimeLeakAnalysis.genruntimeconfig.cache
 /Users/mathiasspezia/Desktop/DTU/DTU3/Bachelor Project/TimeLeakAnalysis/src/obj/Debug/net9.0/ref/TimeLeakAnalysis.dll
+/Users/mathiasspezia/Desktop/DTU/DTU3/Bachelor Project/TimeLeakAnalysis/src/obj/Debug/net9.0/TimeLeakAnalysis.sourcelink.json

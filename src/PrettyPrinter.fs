@@ -40,8 +40,27 @@ let rec prettifyH (ast: AST.command) (currentDepth: int) : string =
         + tabs currentDepth
         + prettifyH c2 currentDepth
     | Assignment(e1, e2) -> prettifyExpression e1 + " := " + prettifyExpression e2
-    | If(gc) -> "if " + prettifyGuarded gc (currentDepth) + "\n" + tabs currentDepth + "fi"
-    | Do(gc) -> "do " + prettifyGuarded gc (currentDepth) + "\n" + tabs currentDepth + "od"
+    | If gc -> "if " + prettifyGuarded gc (currentDepth) + "\n" + tabs currentDepth + "fi"
+    | Do(gc, Some(inv)) ->
+        "do"
+        + "["
+        + prettifyBoolean inv
+        + "]"
+        + "\n"
+        + tabs (currentDepth)
+        + prettifyGuarded gc (currentDepth)
+        + "\n"
+        + tabs currentDepth
+        + "od"
+    | Do(gc, _) ->
+        "do"
+        + "[false]"
+        + "\n"
+        + tabs (currentDepth)
+        + prettifyGuarded gc (currentDepth)
+        + "\n"
+        + tabs currentDepth
+        + "od"
 
 and prettifyGuarded (gc: guarded) (currentDepth: int) : string =
     match gc with

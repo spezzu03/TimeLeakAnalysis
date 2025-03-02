@@ -83,8 +83,9 @@ let rec extractAllVariables (ast: command) : Set<string> =
     | Skip -> Set.empty
     | Assignment(e: expr, e': expr) -> Set.union (extractAllVariablesExpr e) (extractAllVariablesExpr e')
     | Sequence(c1, c2) -> Set.union (extractAllVariables c1) (extractAllVariables c2)
+    | Do(gc, Some(inv)) -> Set.union (extractAllVariablesGuarded gc) (extractAllVariablesBool inv)
     | If gc
-    | Do gc -> extractAllVariablesGuarded gc
+    | Do(gc, _) -> extractAllVariablesGuarded gc
 
 and extractAllVariablesGuarded (gc: guarded) : Set<string> =
     match gc with
@@ -131,7 +132,8 @@ let rec rename (ast: command) : command =
     | Assignment(e: expr, e': expr) -> Assignment(renameExpr e, renameExpr e')
     | Sequence(c1, c2) -> Sequence(rename c1, rename c2)
     | If gc -> If(renameGuarded gc)
-    | Do gc -> Do(renameGuarded gc)
+    | Do(gc, None) -> Do(renameGuarded gc, None)
+    | Do(gc, Some(b)) -> Do(renameGuarded gc, Some(renameBool b))
 
 and renameGuarded (gc: guarded) : guarded =
     match gc with
@@ -149,9 +151,9 @@ let rec det (c: command) : command =
     | If gc ->
         let gc', _ = detGC gc (Value false)
         If gc'
-    | Do gc ->
+    | Do(gc, inv) ->
         let gc', _ = detGC gc (Value false)
-        Do gc'
+        Do(gc', inv)
     | Sequence(c, c') -> Sequence(det c, det c')
     | x -> x
 

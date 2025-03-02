@@ -49,7 +49,7 @@ let rec clock (ast: command) =
         )
     | Sequence(c1, c2) -> Sequence(clock c1, clock c2)
     | If gc -> If(clockGuarded gc)
-    | Do gc -> Do(clockGuarded gc)
+    | Do(gc, inv) -> Do(clockGuarded gc, inv)
 
 and clockGuarded (gc: guarded) =
     match gc with
