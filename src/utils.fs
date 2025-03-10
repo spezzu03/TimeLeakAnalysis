@@ -149,10 +149,10 @@ let mergePrograms (originalAST: command) (renamedAST: command) : command = Seque
 let rec det (c: command) : command =
     match c with
     | If gc ->
-        let gc', _ = detGC gc (Value false)
+        let gc', _ = detGCfirst gc
         If gc'
     | Do(gc, inv) ->
-        let gc', _ = detGC gc (Value false)
+        let gc', _ = detGCfirst gc
         Do(gc', inv)
     | Sequence(c, c') -> Sequence(det c, det c')
     | x -> x
@@ -164,3 +164,11 @@ and detGC gc d =
         let gc1', d1 = detGC gc1 d
         let gc2', d2 = detGC gc2 d1
         Guard(gc1', gc2'), d2
+
+and detGCfirst gc =
+    match gc with
+    | Guard(gc1, gc2) ->
+        let gc1', d1 = detGCfirst gc1
+        let gc2', d2 = detGC gc2 d1
+        Guard(gc1, gc2'), d2
+    | Arrow(b, c) -> Arrow(b, c), b
