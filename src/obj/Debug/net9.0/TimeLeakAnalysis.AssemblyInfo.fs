@@ -10,7 +10,7 @@ open System.Reflection
 [<assembly: System.Reflection.AssemblyCompanyAttribute("TimeLeakAnalysis")>]
 [<assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")>]
 [<assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")>]
-[<assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c82605922deb2980ffaf2eb11a8f3ddcd8eb2838")>]
+[<assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f594ce9385fa89e34c8b749967af08d7f8478382")>]
 [<assembly: System.Reflection.AssemblyProductAttribute("TimeLeakAnalysis")>]
 [<assembly: System.Reflection.AssemblyTitleAttribute("TimeLeakAnalysis")>]
 [<assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")>]

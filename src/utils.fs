@@ -5,7 +5,7 @@ open System.IO
 open FSharp.Text.Lexing
 open Lexer
 open Parser
-open AST // Assuming you have an AST module for parsed results
+open AST
 
 // parsing
 let parseInputProgram (input: string) =
@@ -34,14 +34,18 @@ let parseInputFile (filePath: string) : Set<string> * command =
         | Ok ast -> (privateVars, ast)
         | Error e -> failwith ("Error " + e)
 
-// Hoare contract
-let generateHoareContract (publicVars: Set<string>) =
-    "{ "
-    + (publicVars
-       |> Set.toList
-       |> List.map (fun v -> v + " = _" + v)
-       |> String.concat " & ")
-    + " }"
+// Takes a set of variables and two indices i and j and returns the string {xi = xj & yi=yj & ...}
+// where xi and yi are the variables in the set
+// and xj and yj are the variables in the set with the suffix j
+// e.g. {x1 = x2 & y1 = y2 & ...}
+let generatePrecondition (vars: Set<string>) (i: string) (j: string) : string =
+    let precondition =
+        vars
+        |> Set.map (fun v -> sprintf "%s = %s" (v + i) (v + j))
+        |> String.concat " & "
+
+    sprintf "{ %s }" precondition
+
 
 
 // Write output file
@@ -99,46 +103,46 @@ let rec extractPublicVariables (c: command) (priv: Set<string>) =
 
 // duplicate code
 
-let rec renameExpr (e: expr) : expr =
+let rec renameExpr (e: expr) (suf: string) : expr =
     match e with
     | Num(n) -> Num n
-    | Variable x -> Variable("_" + x)
-    | UMinusExpr e1 -> UMinusExpr(renameExpr e1)
-    | Array(x, e1) -> Array("_" + x, renameExpr e1)
-    | TimesExpr(e1, e2) -> TimesExpr(renameExpr e1, renameExpr e2)
-    | DivExpr(e1, e2) -> DivExpr(renameExpr e1, renameExpr e2)
-    | PlusExpr(e1, e2) -> PlusExpr(renameExpr e1, renameExpr e2)
-    | MinusExpr(e1, e2) -> MinusExpr(renameExpr e1, renameExpr e2)
-    | PowExpr(e1, e2) -> PowExpr(renameExpr e1, renameExpr e2)
+    | Variable x -> Variable(x + suf)
+    | UMinusExpr e1 -> UMinusExpr(renameExpr e1 suf)
+    | Array(x, e1) -> Array("_" + x, renameExpr e1 suf)
+    | TimesExpr(e1, e2) -> TimesExpr(renameExpr e1 suf, renameExpr e2 suf)
+    | DivExpr(e1, e2) -> DivExpr(renameExpr e1 suf, renameExpr e2 suf)
+    | PlusExpr(e1, e2) -> PlusExpr(renameExpr e1 suf, renameExpr e2 suf)
+    | MinusExpr(e1, e2) -> MinusExpr(renameExpr e1 suf, renameExpr e2 suf)
+    | PowExpr(e1, e2) -> PowExpr(renameExpr e1 suf, renameExpr e2 suf)
 
-let rec renameBool (b: boolean) : boolean =
+let rec renameBool (b: boolean) (suf: string) : boolean =
     match b with
     | Value x -> Value x
-    | BitOr(b1, b2) -> BitOr(renameBool b1, renameBool b2)
-    | BitAnd(b1, b2) -> BitAnd(renameBool b1, renameBool b2)
-    | LogOr(b1, b2) -> LogOr(renameBool b1, renameBool b2)
-    | LogAnd(b1, b2) -> LogAnd(renameBool b1, renameBool b2)
-    | Not b1 -> Not(renameBool b1)
-    | Equal(e1, e2) -> Equal(renameExpr e1, renameExpr e2)
-    | NotEqual(e1, e2) -> NotEqual(renameExpr e1, renameExpr e2)
-    | Greater(e1, e2) -> Greater(renameExpr e1, renameExpr e2)
-    | GreaterEqual(e1, e2) -> GreaterEqual(renameExpr e1, renameExpr e2)
-    | Less(e1, e2) -> Less(renameExpr e1, renameExpr e2)
-    | LessEqual(e1, e2) -> LessEqual(renameExpr e1, renameExpr e2)
+    | BitOr(b1, b2) -> BitOr(renameBool b1 suf, renameBool b2 suf)
+    | BitAnd(b1, b2) -> BitAnd(renameBool b1 suf, renameBool b2 suf)
+    | LogOr(b1, b2) -> LogOr(renameBool b1 suf, renameBool b2 suf)
+    | LogAnd(b1, b2) -> LogAnd(renameBool b1 suf, renameBool b2 suf)
+    | Not b1 -> Not(renameBool b1 suf)
+    | Equal(e1, e2) -> Equal(renameExpr e1 suf, renameExpr e2 suf)
+    | NotEqual(e1, e2) -> NotEqual(renameExpr e1 suf, renameExpr e2 suf)
+    | Greater(e1, e2) -> Greater(renameExpr e1 suf, renameExpr e2 suf)
+    | GreaterEqual(e1, e2) -> GreaterEqual(renameExpr e1 suf, renameExpr e2 suf)
+    | Less(e1, e2) -> Less(renameExpr e1 suf, renameExpr e2 suf)
+    | LessEqual(e1, e2) -> LessEqual(renameExpr e1 suf, renameExpr e2 suf)
 
-let rec rename (ast: command) : command =
+let rec rename (ast: command) (suf: string) : command =
     match ast with
     | Skip -> Skip
-    | Assignment(e: expr, e': expr) -> Assignment(renameExpr e, renameExpr e')
-    | Sequence(c1, c2) -> Sequence(rename c1, rename c2)
-    | If gc -> If(renameGuarded gc)
-    | Do(gc, None) -> Do(renameGuarded gc, None)
-    | Do(gc, Some(b)) -> Do(renameGuarded gc, Some(renameBool b))
+    | Assignment(e: expr, e': expr) -> Assignment(renameExpr e suf, renameExpr e' suf)
+    | Sequence(c1, c2) -> Sequence(rename c1 suf, rename c2 suf)
+    | If gc -> If(renameGuarded gc suf)
+    | Do(gc, None) -> Do(renameGuarded gc suf, None)
+    | Do(gc, Some(b)) -> Do(renameGuarded gc suf, Some(renameBool b suf))
 
-and renameGuarded (gc: guarded) : guarded =
+and renameGuarded (gc: guarded) (suf: string) : guarded =
     match gc with
-    | Arrow(b, c) -> Arrow(renameBool b, rename c)
-    | Guard(gc1, gc2) -> Guard(renameGuarded gc1, renameGuarded gc2)
+    | Arrow(b, c) -> Arrow(renameBool b suf, rename c suf)
+    | Guard(gc1, gc2) -> Guard(renameGuarded gc1 suf, renameGuarded gc2 suf)
 
 
 // Function to merge both ASTs
@@ -172,3 +176,22 @@ and detGCfirst gc =
         let gc2', d2 = detGC gc2 d1
         Guard(gc1, gc2'), d2
     | Arrow(b, c) -> Arrow(b, c), b
+
+let rec detEvolv (c: command) : command =
+    match c with
+    | If gc ->
+        let gc', d = detGCfirst gc
+        If(Guard(gc', Arrow(Not(d), Skip)))
+    | Do(gc, inv) ->
+        let gc', d = detGCfirst gc
+        Do(Guard(gc', Arrow(Not(d), Skip)), inv)
+    | Sequence(c, c') -> Sequence(detEvolv c, detEvolv c')
+    | x -> x
+
+
+// let rec doneH (gc: guarded) : boolean =
+//     match gc with
+//     | Arrow(b, c) -> b
+//     | Guard(gc1, gc2) -> LogOr(doneH gc1, doneH gc2)
+
+// let doneBool (gc: guarded) : boolean = Not(doneH gc)

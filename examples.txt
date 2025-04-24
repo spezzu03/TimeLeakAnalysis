@@ -1,7 +1,41 @@
-private: x
-if x > 0 -> y := 5
-[]
-x <= 0 -> y := 10; z := y + 3
+-- not safe
+private: a,b,c,out
+out := 0;
+if x = a ->
+    if y = b ->
+        if z = c -> out := 1
+        [] true -> skip
+        fi
+    [] true -> skip
+    fi
+   [] true -> skip
 fi
 
+private: a, b, c, out
+out := 0;
+n := 5;
+do[n>=0 & out+n = 5 & time = 2 + 6*out] 
+n>0 ->
+    out := out + 1;
+    n := n - 1
+od
+
+
+
+-- safe
+private: a,b,c,out
+out := 0;
+if x = a ->
+    out := out +1
+[] true -> skip
+fi;
+if y = b ->
+    out := out +1
+[] true -> skip
+fi;
+if z = c ->
+    out := out +1
+[] true -> skip
+fi;
+out:=out/3
 

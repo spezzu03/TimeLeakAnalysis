@@ -20,7 +20,7 @@ let clockExpression (e: expr) = Num(clockExpressionH e)
 
 let rec clockBooleanH (b: boolean) : int =
     match b with
-    | Value(_) -> 0 // true anf false are constants
+    | Value(_) -> 0 // true and false are constants
     | Not(b) -> 1 + clockBooleanH b
     // binary operators
     | BitOr(b1, b2)
@@ -41,27 +41,31 @@ let rec clock (ast: command) =
     | Skip -> Skip
     | Assignment(v, e) ->
         Sequence(
-            Assignment(v, e),
             Assignment(
                 Variable "time",
                 PlusExpr(PlusExpr(PlusExpr(Variable("time"), Num(1)), clockExpression v), clockExpression e)
-            )
+            ),
+            Assignment(v, e)
+
         )
     | Sequence(c1, c2) -> Sequence(clock c1, clock c2)
-    | If gc -> If(clockGuarded gc)
-    | Do(gc, inv) -> Do(clockGuarded gc, inv)
+    | If gc ->
+        let gc', _ = clockGuarded gc (Num(0))
+        If(gc')
+    | Do(gc, inv) ->
+        let gc', tau_done = clockGuarded gc (Num(0))
+        Sequence(Do(gc', inv), Assignment(Variable("time"), PlusExpr(Variable("time"), tau_done)))
 
-and clockGuarded (gc: guarded) =
+and clockGuarded (gc: guarded) (tau: expr) : guarded * expr =
     match gc with
     | Arrow(b, c) ->
-        Arrow(
-            b,
-            Sequence(
-                Assignment(Variable("time"), PlusExpr(PlusExpr(Variable("time"), Num(1)), clockBoolean b)),
-                clock c
-            )
-        )
-    | Guard(gc1, gc2) -> Guard(clockGuarded gc1, clockGuarded gc2)
+        let tau' = PlusExpr(clockBoolean b, tau)
+        Arrow(b, Sequence(Assignment(Variable("time"), PlusExpr(Variable("time"), tau')), clock c)), tau'
+
+    | Guard(gc1, gc2) ->
+        let gc1', tau1 = clockGuarded gc1 tau
+        let gc2', tau2 = clockGuarded gc2 tau1
+        Guard(gc1', gc2'), tau2
 
 
 let rec instrument (ast: command) =
