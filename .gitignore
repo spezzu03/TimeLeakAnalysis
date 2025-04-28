@@ -1,4 +1,46 @@
-/src/Data/*
-/src/bin/*
-/src/obj/*
-.fake
+# Ignore build output
+src/obj/
+stc/Data/
+src/bin/
+
+# Ignore user-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
+*.code-workspace
+
+# Ignore temporary files
+*.tmp
+*.log
+*.lock
+*.cache
+*.aux
+*.out
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore dependency folders (if applicable)
+packages/
+node_modules/
+
+# Ignore compiled files
+*.dll
+*.exe
+*.pdb
+*.mdb
+
+# Ignore generated files
+*.g.*
+*.generated.*
+
+# Ignore backup files
+*~
+*.bak
+*.swp
