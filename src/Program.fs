@@ -48,14 +48,11 @@ let main argv =
         let modProductAST = modProdProg detAST (AST.Variable "q")
 
         match mode with
-        | "timed" -> File.WriteAllText("Data/output.txt", PrettyPrinter.prettify timedAST)
-        | "modular" ->
-            writeOutputFile "Data/output.txt" precondition postcondition (PrettyPrinter.prettify modProductAST)
-        | "self" ->
-            writeOutputFile "Data/output.txt" precondition postcondition (PrettyPrinter.prettify selfcomposedAST)
+        | "timed" -> File.WriteAllText(dest, PrettyPrinter.prettify timedAST)
+        | "modular" -> writeOutputFile dest precondition postcondition (PrettyPrinter.prettify modProductAST)
+        | "self" -> writeOutputFile dest precondition postcondition (PrettyPrinter.prettify selfcomposedAST)
         | _ -> failwith errMess
     with ex ->
         printfn "%s" ex.Message
-        File.WriteAllText("Data/output.txt", ex.Message)
 
     0 // Return exit code
