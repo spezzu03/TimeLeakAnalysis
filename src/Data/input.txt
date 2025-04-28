@@ -1,2 +1,4 @@
-private: 
-do x>0 -> skip; x:=x-1 [] x<0 -> x:=x+1 od
+private: a
+do n>5 -> n:=n-1
+[] n>0 -> a:= a+1; n:=n-1
+od

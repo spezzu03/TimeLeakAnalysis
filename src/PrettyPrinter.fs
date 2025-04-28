@@ -19,8 +19,8 @@ let rec prettifyBoolean ast : string =
     | Value x -> ((string) x).ToLower()
     | BitOr(b1, b2) -> "(" + prettifyBoolean b1 + " | " + prettifyBoolean b2 + ")"
     | BitAnd(b1, b2) -> "(" + prettifyBoolean b1 + " & " + prettifyBoolean b2 + ")"
-    | LogOr(b1, b2) -> "(" + prettifyBoolean b1 + " || " + prettifyBoolean b2 + ")"
-    | LogAnd(b1, b2) -> "(" + prettifyBoolean b1 + " && " + prettifyBoolean b2 + ")"
+    | LogOr(b1, b2) -> "(" + prettifyBoolean b1 + " | " + prettifyBoolean b2 + ")" // should be ||
+    | LogAnd(b1, b2) -> "(" + prettifyBoolean b1 + " & " + prettifyBoolean b2 + ")" // should be &&
     | Not(b1) -> "!" + prettifyBoolean b1
     | Equal(e1, e2) -> "(" + prettifyExpression e1 + " = " + prettifyExpression e2 + ")"
     | NotEqual(e1, e2) -> "(" + prettifyExpression e1 + " != " + prettifyExpression e2 + ")"

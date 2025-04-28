@@ -44,7 +44,7 @@ let generatePrecondition (vars: Set<string>) (i: string) (j: string) : string =
         |> Set.map (fun v -> sprintf "%s = %s" (v + i) (v + j))
         |> String.concat " & "
 
-    sprintf "{ %s }" precondition
+    sprintf " %s " precondition
 
 
 
