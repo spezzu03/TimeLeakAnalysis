@@ -54,8 +54,6 @@ let main argv =
         | "self" ->
             writeOutputFile "Data/output.txt" precondition postcondition (PrettyPrinter.prettify selfcomposedAST)
         | _ -> failwith errMess
-
-    //writeOutputFile "Data/output.txt" precondition postcondition (PrettyPrinter.prettify selfcomposedAST)
     with ex ->
         printfn "%s" ex.Message
         File.WriteAllText("Data/output.txt", ex.Message)
