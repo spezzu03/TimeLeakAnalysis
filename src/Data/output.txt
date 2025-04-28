@@ -1,27 +1,5 @@
-{  n1 = n2  }
-time1 := 0;
-do[false]
-(n1 > 5) -> time1 := (time1 + (1 + 0));
-	time1 := (((time1 + 1) + 0) + 1);
-	n1 := (n1 - 1)
-[] ((n1 > 0) & !(n1 > 5)) -> time1 := (time1 + (1 + (1 + 0)));
-	time1 := (((time1 + 1) + 0) + 1);
-	a1 := (a1 + 1);
-	time1 := (((time1 + 1) + 0) + 1);
-	n1 := (n1 - 1)
-od;
-time1 := (time1 + (1 + (1 + 0)));
-time2 := 0;
-do[false]
-(n2 > 5) -> time2 := (time2 + (1 + 0));
-	time2 := (((time2 + 1) + 0) + 1);
-	n2 := (n2 - 1)
-[] ((n2 > 0) & !(n2 > 5)) -> time2 := (time2 + (1 + (1 + 0)));
-	time2 := (((time2 + 1) + 0) + 1);
-	a2 := (a2 + 1);
-	time2 := (((time2 + 1) + 0) + 1);
-	n2 := (n2 - 1)
-od;
-time2 := (time2 + (1 + (1 + 0)))
-
-{ ( n1 = n2 ) ==> time1 = time2 }
+Wrong use. Flags are: 
+            --mode: what shall be output. Can be one of {timed, modular, self}
+            --src: source file. Standard is "Data/input.txt"
+            --dest: destination file. Standard is "Data/output.txt"
+            --sens: whether to use output-sensitive or -insensitive definition of ct. Can be one of {sensitive, insensitive}

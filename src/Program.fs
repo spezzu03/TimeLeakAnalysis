@@ -3,6 +3,14 @@ open utils
 open Clock
 open ModularComposition
 
+let errMess =
+    "Wrong use. Flags are: 
+    --mode: what shall be output. Can be one of {timed, modular, self}
+    --src: source file. Standard is \"Data/input.txt\"
+    --dest: destination file. Standard is \"Data/output.txt\"
+    --sens: whether to use output-sensitive or -insensitive definition of ct. Can be one of {sensitive, insensitive}"
+
+
 let rec parseArgs =
     function
     | [] -> Map.empty
@@ -13,23 +21,23 @@ let rec parseArgs =
             if not (Map.containsKey "mode" restMap) then
                 Map.add "mode" m restMap
             else
-                failwith "you can specify mode only once"
+                failwith errMess
         else
-            failwith "mode does not exist"
+            failwith errMess
     | "--dest" :: f :: rest ->
         let restMap = parseArgs rest
 
         if not (Map.containsKey "dest" restMap) then
             Map.add "dest" f restMap
         else
-            failwith "you can specify destination file only once"
+            failwith errMess
     | "--src" :: f :: rest ->
         let restMap = parseArgs rest
 
         if not (Map.containsKey "src" restMap) then
             Map.add "src" f restMap
         else
-            failwith "you can specify source file only once"
+            failwith errMess
     | "--sens" :: s :: rest ->
         let restMap = parseArgs rest
 
@@ -37,17 +45,10 @@ let rec parseArgs =
             if not (Map.containsKey "sens" restMap) then
                 Map.add "sens" s restMap
             else
-                failwith "you can specify sensitivity only once"
+                failwith errMess
         else
-            failwith "sensitivity does not exist"
-    | _ ->
-        failwith
-            "Wrong use. Flags are: 
-            \n--mode: what shall be output. Can be one of {timed, modular, self}
-            \n--src: source file. Standard is \"input.txt\"
-            \n--dest: destination file. Standard is \"output.txt\"
-            \n--sens: whether to use output-sensitive or -insensitive definition of ct. Can be one of {sensitive, insensitive}"
-
+            failwith errMess
+    | _ -> failwith errMess
 
 [<EntryPoint>]
 let main argv =
@@ -86,7 +87,7 @@ let main argv =
             match sens with
             | "insensitive" -> "{ time1 = time2 }"
             | "sensitive" -> "{ (" + generatePrecondition publicVars "1" "2" + ") ==> time1 = time2 }"
-            | _ -> failwith "Sensitivity does not exist"
+            | _ -> failwith errMess
 
         let timedAST = instrument ast
         let detAST = det timedAST
