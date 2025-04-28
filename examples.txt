@@ -1,5 +1,5 @@
 -- not safe
-private: a,b,c,out
+private: a,b,c
 out := 0;
 if x = a ->
     if y = b ->
@@ -11,7 +11,17 @@ if x = a ->
    [] true -> skip
 fi
 
-private: a, b, c, out
+-- not safe
+private: a,b
+out := 0;
+if x = a ->
+    if y = b -> out := 1
+    [] true -> skip
+    fi
+   [] true -> skip
+fi
+
+private: a, b, c
 out := 0;
 n := 5;
 do[n>=0 & out+n = 5 & time = 2 + 6*out] 
@@ -23,7 +33,7 @@ od
 
 
 -- safe
-private: a,b,c,out
+private: a,b,c
 out := 0;
 if x = a ->
     out := out +1

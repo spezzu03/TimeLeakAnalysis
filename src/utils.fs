@@ -8,7 +8,7 @@ open Parser
 open AST
 
 // parsing
-let parseInputProgram (input: string) =
+let parseInputProgram (input: string) = // parsing program
     let lexbuf = LexBuffer<char>.FromString(input) // Convert input string into a lex buffer
 
     try
@@ -16,6 +16,53 @@ let parseInputProgram (input: string) =
         Ok ast
     with ex ->
         Error("Parsing failed: " + ex.Message)
+
+let errMess = // parsing program arguments
+    "Wrong use. Flags are: 
+    --mode: what shall be output. Can be one of {timed, modular, self}
+    --src: source file. Standard is \"Data/input.txt\"
+    --dest: destination file. Standard is \"Data/output.txt\"
+    --sens: whether to use output-sensitive or -insensitive definition of ct. Can be one of {sensitive, insensitive}"
+
+
+let rec parseArgs =
+    function
+    | [] -> Map.empty
+    | "--mode" :: m :: rest ->
+        let restMap = parseArgs rest
+
+        if List.contains m [ "timed"; "modular"; "self" ] then
+            if not (Map.containsKey "mode" restMap) then
+                Map.add "mode" m restMap
+            else
+                failwith errMess
+        else
+            failwith errMess
+    | "--dest" :: f :: rest ->
+        let restMap = parseArgs rest
+
+        if not (Map.containsKey "dest" restMap) then
+            Map.add "dest" f restMap
+        else
+            failwith errMess
+    | "--src" :: f :: rest ->
+        let restMap = parseArgs rest
+
+        if not (Map.containsKey "src" restMap) then
+            Map.add "src" f restMap
+        else
+            failwith errMess
+    | "--sens" :: s :: rest ->
+        let restMap = parseArgs rest
+
+        if List.contains s [ "sensitive"; "insensitive" ] then
+            if not (Map.containsKey "sens" restMap) then
+                Map.add "sens" s restMap
+            else
+                failwith errMess
+        else
+            failwith errMess
+    | _ -> failwith errMess
 
 // file handling
 
@@ -42,6 +89,7 @@ let generatePrecondition (vars: Set<string>) (i: string) (j: string) : string =
     let precondition =
         vars
         |> Set.map (fun v -> sprintf "%s = %s" (v + i) (v + j))
+        |> Set.union (Set.singleton "true")
         |> String.concat " & "
 
     sprintf " %s " precondition
@@ -146,7 +194,8 @@ and renameGuarded (gc: guarded) (suf: string) : guarded =
 
 
 // Function to merge both ASTs
-let mergePrograms (originalAST: command) (renamedAST: command) : command = Sequence(originalAST, renamedAST)
+let selfcompose (ast: command) : command =
+    Sequence(rename ast "1", rename ast "2")
 
 // determinism
 
@@ -187,11 +236,3 @@ let rec detEvolv (c: command) : command =
         Do(Guard(gc', Arrow(Not(d), Skip)), inv)
     | Sequence(c, c') -> Sequence(detEvolv c, detEvolv c')
     | x -> x
-
-
-// let rec doneH (gc: guarded) : boolean =
-//     match gc with
-//     | Arrow(b, c) -> b
-//     | Guard(gc1, gc2) -> LogOr(doneH gc1, doneH gc2)
-
-// let doneBool (gc: guarded) : boolean = Not(doneH gc)

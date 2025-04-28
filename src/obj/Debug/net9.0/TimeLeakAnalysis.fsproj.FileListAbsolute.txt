@@ -22,10 +22,10 @@
 /Users/mathiasspezia/Desktop/DTU/DTU3/Bachelor Project/TimeLeakAnalysis/src/obj/Debug/net9.0/TimeLeakAnalysis.AssemblyInfoInputs.cache
 /Users/mathiasspezia/Desktop/DTU/DTU3/Bachelor Project/TimeLeakAnalysis/src/obj/Debug/net9.0/TimeLeakAnalysis.AssemblyInfo.fs
 /Users/mathiasspezia/Desktop/DTU/DTU3/Bachelor Project/TimeLeakAnalysis/src/obj/Debug/net9.0/TimeLeakAnalysis.fsproj.CoreCompileInputs.cache
+/Users/mathiasspezia/Desktop/DTU/DTU3/Bachelor Project/TimeLeakAnalysis/src/obj/Debug/net9.0/TimeLeakAnalysis.sourcelink.json
 /Users/mathiasspezia/Desktop/DTU/DTU3/Bachelor Project/TimeLeakAnalysis/src/obj/Debug/net9.0/TimeLeak.CE65C7CE.Up2Date
 /Users/mathiasspezia/Desktop/DTU/DTU3/Bachelor Project/TimeLeakAnalysis/src/obj/Debug/net9.0/TimeLeakAnalysis.dll
 /Users/mathiasspezia/Desktop/DTU/DTU3/Bachelor Project/TimeLeakAnalysis/src/obj/Debug/net9.0/refint/TimeLeakAnalysis.dll
 /Users/mathiasspezia/Desktop/DTU/DTU3/Bachelor Project/TimeLeakAnalysis/src/obj/Debug/net9.0/TimeLeakAnalysis.pdb
 /Users/mathiasspezia/Desktop/DTU/DTU3/Bachelor Project/TimeLeakAnalysis/src/obj/Debug/net9.0/TimeLeakAnalysis.genruntimeconfig.cache
 /Users/mathiasspezia/Desktop/DTU/DTU3/Bachelor Project/TimeLeakAnalysis/src/obj/Debug/net9.0/ref/TimeLeakAnalysis.dll
-/Users/mathiasspezia/Desktop/DTU/DTU3/Bachelor Project/TimeLeakAnalysis/src/obj/Debug/net9.0/TimeLeakAnalysis.sourcelink.json

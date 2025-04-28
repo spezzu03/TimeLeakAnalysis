@@ -1,4 +1,8 @@
-private: a
-do n>5 -> n:=n-1
-[] n>0 -> a:= a+1; n:=n-1
-od
+private: x,y,a,b,out
+out := 0;
+if x = a ->
+    if y = b -> out := 1
+    [] true -> skip
+    fi
+   [] true -> skip
+fi
