@@ -1,29 +1,54 @@
-{  true  }
+{  out1 = out2 & true & x1 = x2 & y1 = y2 & z1 = z2  }
 time1 := 0;
-time1 := (((time1 + 1) + 0) + 0);
+time1 := ((time1 + 1) + 0);
 out1 := 0;
 if (x1 = a1) -> time1 := (time1 + (1 + 0));
-	if (y1 = b1) -> time1 := (time1 + (1 + 0));
-		time1 := (((time1 + 1) + 0) + 0);
-		out1 := 1
-	[] true -> time1 := (time1 + (0 + (1 + 0)));
-		skip
-	fi
+	time1 := ((time1 + 1) + 1);
+	out1 := (out1 + 1)
 [] (true & !(x1 = a1)) -> time1 := (time1 + (0 + (1 + 0)));
-	skip
+	time1 := ((time1 + 1) + 1);
+	out1 := (out1 + 0)
 fi;
+if (y1 = b1) -> time1 := (time1 + (1 + 0));
+	time1 := ((time1 + 1) + 1);
+	out1 := (out1 + 1)
+[] (true & !(y1 = b1)) -> time1 := (time1 + (0 + (1 + 0)));
+	time1 := ((time1 + 1) + 1);
+	out1 := (out1 + 0)
+fi;
+if (z1 = c1) -> time1 := (time1 + (1 + 0));
+	time1 := ((time1 + 1) + 1);
+	out1 := (out1 + 1)
+[] (true & !(z1 = c1)) -> time1 := (time1 + (0 + (1 + 0)));
+	time1 := ((time1 + 1) + 1);
+	out1 := (out1 + 0)
+fi;
+time1 := ((time1 + 1) + 1);
+out1 := (out1 / 3);
 time2 := 0;
-time2 := (((time2 + 1) + 0) + 0);
+time2 := ((time2 + 1) + 0);
 out2 := 0;
 if (x2 = a2) -> time2 := (time2 + (1 + 0));
-	if (y2 = b2) -> time2 := (time2 + (1 + 0));
-		time2 := (((time2 + 1) + 0) + 0);
-		out2 := 1
-	[] true -> time2 := (time2 + (0 + (1 + 0)));
-		skip
-	fi
+	time2 := ((time2 + 1) + 1);
+	out2 := (out2 + 1)
 [] (true & !(x2 = a2)) -> time2 := (time2 + (0 + (1 + 0)));
-	skip
-fi
-
+	time2 := ((time2 + 1) + 1);
+	out2 := (out2 + 0)
+fi;
+if (y2 = b2) -> time2 := (time2 + (1 + 0));
+	time2 := ((time2 + 1) + 1);
+	out2 := (out2 + 1)
+[] (true & !(y2 = b2)) -> time2 := (time2 + (0 + (1 + 0)));
+	time2 := ((time2 + 1) + 1);
+	out2 := (out2 + 0)
+fi;
+if (z2 = c2) -> time2 := (time2 + (1 + 0));
+	time2 := ((time2 + 1) + 1);
+	out2 := (out2 + 1)
+[] (true & !(z2 = c2)) -> time2 := (time2 + (0 + (1 + 0)));
+	time2 := ((time2 + 1) + 1);
+	out2 := (out2 + 0)
+fi;
+time2 := ((time2 + 1) + 1);
+out2 := (out2 / 3)
 { time1 = time2 }

@@ -10,11 +10,13 @@ The goal of this project is to see how far one can go when answering this questi
 
 **"src/Clock.fs"** takes care of instrumenting the AST with the time variable and updating it according to some rules that can be inferred from the function.
 
-**"src/ModularComposition.fs** has the necessary functions to compose programs modularly, according to the definition from the paper.
+**"src/Verification.fs"** has the functions to generate the parts of an annotated program using self-composition.
+
+**"src/ModularComposition.fs"** has the necessary functions to compose programs modularly, according to the definition from the paper.
 
 **"src/Program.fs"** combines everything together, containing the logic for the tool application.
 
-The program supplies a Hoare contract, such that non-interference can be verified by an external tool, called [Chip](https://team-checkr.github.io/chip).
+The program supplies a Hoare contract, such that non-interference can be verified by an external tool, called [Chip](https://team-checkr.github.io/chip)
 
 ## The language
 

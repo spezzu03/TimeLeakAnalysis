@@ -21,31 +21,19 @@ if x = a ->
    [] true -> skip
 fi
 
-private: a, b, c
-out := 0;
-n := 5;
-do[n>=0 & out+n = 5 & time = 2 + 6*out] 
-n>0 ->
-    out := out + 1;
-    n := n - 1
-od
-
-
-
 -- safe
 private: a,b,c
 out := 0;
 if x = a ->
     out := out +1
-[] true -> skip
+[] true -> out := out + 0
 fi;
 if y = b ->
     out := out +1
-[] true -> skip
+[] true -> out := out + 0
 fi;
 if z = c ->
     out := out +1
-[] true -> skip
+[] true -> out := out + 0
 fi;
 out:=out/3
-

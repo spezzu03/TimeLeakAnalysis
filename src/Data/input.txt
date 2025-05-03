@@ -1,8 +1,15 @@
-private: x,y,a,b,out
+private: a,b,c
 out := 0;
 if x = a ->
-    if y = b -> out := 1
-    [] true -> skip
-    fi
-   [] true -> skip
-fi
+    out := out +1
+[] true -> out := out + 0
+fi;
+if y = b ->
+    out := out +1
+[] true -> out := out + 0
+fi;
+if z = c ->
+    out := out +1
+[] true -> out := out + 0
+fi;
+out:=out/3

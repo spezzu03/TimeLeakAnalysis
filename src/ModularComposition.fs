@@ -35,14 +35,14 @@ let rec cross (ast: command) (p: expr) : command =
         Sequence(
             If(
                 Guard(
-                    Arrow(Equal(renameExpr p "1", Num 1), rename ast "1"),
-                    Arrow(NotEqual(renameExpr p "1", Num 1), Skip)
+                    Arrow(Equal(Misc.renameExpr p "1", Num 1), Misc.rename ast "1"),
+                    Arrow(NotEqual(Misc.renameExpr p "1", Num 1), Skip)
                 )
             ),
             If(
                 Guard(
-                    Arrow(Equal(renameExpr p "2", Num 1), rename ast "2"),
-                    Arrow(NotEqual(renameExpr p "2", Num 1), Skip)
+                    Arrow(Equal(Misc.renameExpr p "2", Num 1), Misc.rename ast "2"),
+                    Arrow(NotEqual(Misc.renameExpr p "2", Num 1), Skip)
                 )
             )
         )
@@ -64,7 +64,9 @@ let rec cross (ast: command) (p: expr) : command =
         // Initialize all flags to 0
         let initFlags =
             flags
-            |> List.collect (fun f -> [ Assignment(renameExpr f "1", Num 0); Assignment(renameExpr f "2", Num 0) ])
+            |> List.collect (fun f ->
+                [ Assignment(Misc.renameExpr f "1", Num 0)
+                  Assignment(Misc.renameExpr f "2", Num 0) ])
             |> function
                 | s when List.length s < 2 -> failwith "How??"
                 | s -> List.reduce (fun f1 f2 -> Sequence(f1, f2)) s
@@ -80,8 +82,8 @@ let rec cross (ast: command) (p: expr) : command =
                 | [ ar ] -> If(ar)
                 | ars -> List.reduce (fun (ar1: guarded) (ar2: guarded) -> Guard(ar1, ar2)) ars |> If
 
-        let condBlock1 = rename condBlock "1"
-        let condBlock2 = rename condBlock "2"
+        let condBlock1 = Misc.rename condBlock "1"
+        let condBlock2 = Misc.rename condBlock "2"
 
         let crossedBranches =
             branches
@@ -101,7 +103,7 @@ let rec cross (ast: command) (p: expr) : command =
 
         Do(
             Arrow(
-                LogOr(renameBool execCondition "1", renameBool execCondition "2"),
+                LogOr(Misc.renameBool execCondition "1", Misc.renameBool execCondition "2"),
                 cross (If(Guard(gc, Arrow(Not(disj), Skip)))) p
             ),
             inv
@@ -109,6 +111,6 @@ let rec cross (ast: command) (p: expr) : command =
 
 let modProdProg ast actVar =
     Sequence(
-        Sequence(Assignment(renameExpr actVar "1", Num 1), Assignment(renameExpr actVar "2", Num 1)),
+        Sequence(Assignment(Misc.renameExpr actVar "1", Num 1), Assignment(Misc.renameExpr actVar "2", Num 1)),
         cross ast actVar
     )

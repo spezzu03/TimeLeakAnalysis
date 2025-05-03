@@ -1,6 +1,5 @@
 # Ignore build output
 src/obj/
-stc/Data/
 src/bin/
 
 # Ignore user-specific files
@@ -44,3 +43,4 @@ node_modules/
 *~
 *.bak
 *.swp
+.fake

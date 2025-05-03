@@ -41,10 +41,7 @@ let rec clock (ast: command) =
     | Skip -> Skip
     | Assignment(v, e) ->
         Sequence(
-            Assignment(
-                Variable "time",
-                PlusExpr(PlusExpr(PlusExpr(Variable("time"), Num(1)), clockExpression v), clockExpression e)
-            ),
+            Assignment(Variable "time", PlusExpr(PlusExpr(Variable("time"), Num(1)), clockExpression e)),
             Assignment(v, e)
 
         )
