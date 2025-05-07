@@ -189,7 +189,7 @@ module Misc =
 
     and detGC gc d =
         match gc with
-        | Arrow(b, c) -> Arrow(BitAnd(b, Not(d)), det c), BitOr(b, d)
+        | Arrow(b, c) -> Arrow(BitAnd(b, Not d), det c), BitOr(b, d)
         | Guard(gc1, gc2) ->
             let gc1', d1 = detGC gc1 d
             let gc2', d2 = detGC gc2 d1
@@ -200,5 +200,5 @@ module Misc =
         | Guard(gc1, gc2) ->
             let gc1', d1 = detGCfirst gc1
             let gc2', d2 = detGC gc2 d1
-            Guard(gc1, gc2'), d2
-        | Arrow(b, c) -> Arrow(b, c), b
+            Guard(gc1', gc2'), d2
+        | Arrow(b, c) -> Arrow(b, det c), b
